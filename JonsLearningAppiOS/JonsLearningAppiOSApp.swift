@@ -25,7 +25,7 @@ struct JonsLearningAppiOSApp: App {
             if isLoggedIn {
                 DashboardScreen()
             } else {
-                SignInScreen()
+                SignUpScreen()
             }
         }
     }

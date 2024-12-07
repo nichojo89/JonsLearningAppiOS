@@ -7,9 +7,11 @@
 import SwiftUI
 
 struct EmailVerificationScreen: View {
+    @ObservedObject private var viewmodel = EmailVerificationViewModel()
+    
     var body: some View {
         Button("Send email verification"){
-            FirebaseAuthenticator.sendVerificationEmail()
+            viewmodel.sendVerificationEmail()
         }
     }
 }
