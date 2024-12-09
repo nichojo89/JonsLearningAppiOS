@@ -13,12 +13,12 @@ class SignUpViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var confirmPassword: String = ""
     @Published var isSignupDisabled: Bool = true
-    @Published var isPasswordSecure: Bool = true
     @Published var emailErrorMessage: String = ""
     @Published var passwordErrorMessage: String = ""
     @Published var isConfirmPasswordVisible: Bool = false
     @Published var confirmPasswordErrorMessage: String = ""
     @Published var navigateToEmailVerification: Bool = false
+    @Published var navigateToDashboardScreen: Bool = false
     
     func showEmailVerification() -> Bool {
         if !FirebaseAuthenticator.authUser!.isEmailVerified {

@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct SignUpScreen : View {
-    
+    @Environment(\.presentationMode) var presentation
     @ObservedObject private var viewmodel = SignUpViewModel()
     @FocusState private var isPasswordFocused: Bool
     
@@ -25,12 +25,6 @@ struct SignUpScreen : View {
                         
                         let logoHeight = geometry.size.height * 0.1
                         let verticleSpacing = geometry.size.height * 0.01
-                        
-                        Image("jonsLearningAppLogo")
-                            .resizable()
-                            .frame(width: logoHeight, height: logoHeight, alignment: Alignment.center)
-                            .aspectRatio(contentMode: .fit)
-                        
                         VStack {
                             //HERE
                             ScrollView {
@@ -106,37 +100,38 @@ struct SignUpScreen : View {
                                         }
                                         .frame(maxHeight: .infinity)
                                         
-                                        HStack(spacing: 20) {
-                                            Image("ic_google")
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .padding(10)
-                                                .frame(width: 60, height: 60)
-                                                .overlay(
-                                                        RoundedRectangle(cornerRadius: 8)
-                                                            .stroke(.gray, lineWidth: 1)
-                                                    )
-                                            Image("ic_facebook")
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .padding(10)
-                                                .frame(width: 60, height: 60)
-                                                .overlay(
-                                                        RoundedRectangle(cornerRadius: 8)
-                                                            .stroke(.gray, lineWidth: 1)
-                                                    )
-                                            Image("ic_linkedin")
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .padding(10)
-                                                .frame(width: 60, height: 60)
-                                                .overlay(
-                                                        RoundedRectangle(cornerRadius: 8)
-                                                            .stroke(.gray, lineWidth: 1)
-                                                    )
+                                        Button {
+                                            Task {
+                                                do {
+                                                    try await FirebaseAuthenticator.googleOauth() { success in
+                                                        if success {
+                                                            viewmodel.navigateToDashboardScreen = true
+                                                        } else {
+                                                            viewmodel.passwordErrorMessage = "Google sign in failed"
+                                                        }
+                                                    }
+                                                } catch AuthenticationError.runtimeError(let errorMessage) {
+//                                                    let err = errorMessage
+//                                                    print(err) // Print the error for debugging
+                                                }
+                                            }
+                                        } label: {
+                                            VStack {
+                                                Image("ic_google")
+                                                    .resizable()
+                                                    .scaledToFill()
+                                                    .clipped()
+                                                    .padding(10)
+                                                    .frame(width: 60, height: 60)
+                                            }.frame(maxWidth: .infinity)
+                                            
                                         }
-                                        .padding(.vertical,6)
-                                        .frame(maxHeight: .infinity)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .stroke(.gray, lineWidth: 1)
+                                        )
+                                        .padding(.vertical, 12)
+                                        .frame(maxWidth: .infinity, maxHeight: 60)
                                         
                                         Spacer()
                                             .frame(maxHeight: .infinity)
@@ -156,7 +151,7 @@ struct SignUpScreen : View {
                                             .multilineTextAlignment(.center)
                                             .padding(.horizontal, 0)
                                             .onTapGesture {
-                                                //go back
+                                                self.presentation.wrappedValue.dismiss()
                                             }
                                     }
                                         
@@ -167,7 +162,7 @@ struct SignUpScreen : View {
                                             .frame(maxWidth: .infinity)
                                     }
                                     .disabled(viewmodel.isSignupDisabled)
-//                                    .foregroundColor(Color(hex: 0xFFAD3689))
+                                    .foregroundColor(Color(hex: 0xFFAD3689))
                                     .buttonStyle(.borderedProminent)
                                     .buttonBorderShape(.capsule)
                                     
@@ -177,6 +172,7 @@ struct SignUpScreen : View {
                             }
                             
                         }
+                        .padding(.top, 12)
                         .background(.white)
                         .clipShape(RoundedRectangle(
                             cornerRadius: 24,
@@ -191,6 +187,11 @@ struct SignUpScreen : View {
                 .navigationDestination(isPresented: $viewmodel.navigateToEmailVerification){
                     if viewmodel.navigateToEmailVerification {
                         EmailVerificationScreen()
+                    }
+                }
+                .navigationDestination(isPresented: $viewmodel.navigateToDashboardScreen){
+                    if viewmodel.navigateToDashboardScreen {
+                        DashboardScreen()
                     }
                 }
             }
