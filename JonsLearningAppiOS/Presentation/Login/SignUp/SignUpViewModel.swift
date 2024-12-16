@@ -56,6 +56,9 @@ class SignUpViewModel: ObservableObject {
         case .wrongPassword:
             passwordErrorMessage = "Incorrect password"
             emailErrorMessage = ""
+        case .weakPassword:
+            passwordErrorMessage = "Password not strong enough"
+            emailErrorMessage = ""
         default:
             passwordErrorMessage = "unknown error"
             emailErrorMessage = ""

@@ -8,7 +8,6 @@
 import Foundation
 
 class EmailVerificationViewModel: ObservableObject {
-    
     func sendVerificationEmail(){
         FirebaseAuthenticator.sendVerificationEmail()
     }
