@@ -10,8 +10,42 @@ struct EmailVerificationScreen: View {
     @ObservedObject private var viewmodel = EmailVerificationViewModel()
     
     var body: some View {
-        Button("Send email verification"){
-            viewmodel.sendVerificationEmail()
+        NavigationView {
+            NavigatableView(title: "Verification"){
+                GeometryReader { geometry in
+                    VStack(spacing: 0) {
+                        Text("Email verification required")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 30, weight: .bold, design: .default))
+                            .padding()
+                        Text("Send email verification")
+                        Spacer()
+                        Image("ic_email_verification")
+                            .resizable()
+                            .frame(width: geometry.size.width / 3,height: geometry.size.width / 3)
+                        Spacer()
+                        Button {
+                            //
+                        } label: {
+                            Text("Sign up")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .disabled(false)
+                        .background()
+                        .foregroundColor(Color(hex: 0xFFAD3689))
+                        .buttonStyle(.borderedProminent)
+                        .buttonBorderShape(.capsule)
+                        .padding(.bottom, 30)
+                    }
+                    .padding(16)
+                    .navigationBarHidden(true)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+            }
         }
     }
+}
+
+#Preview {
+    EmailVerificationScreen()
 }
