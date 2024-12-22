@@ -17,6 +17,7 @@ class SignInViewModel: ObservableObject {
     @Published var navigateToCreateAccount: Bool = false
     @Published var showForgotPasswordMessage: Bool = false
     @Published var forgotPasswordMessage: String = ""
+    @Published var rememberMe: Bool = true
     
     func validateCredentials() {
         isSigninDisabled =  !username.isValidEmail() || password.isEmpty

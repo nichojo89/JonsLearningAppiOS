@@ -69,27 +69,39 @@ struct SignInScreen : View {
                                         .foregroundColor(.black)
                                         .font(.system(size: 16))
                                         
-                                    Button {
-                                        if(viewmodel.username.isValidEmail()){
-                                            viewmodel.emailErrorMessage = ""
-                                            viewmodel.sendForgotPassword()
-                                        } else {
-                                            viewmodel.emailErrorMessage = "Invalid email"
+                                    HStack(spacing: 0) {
+                                        Toggle(isOn: $viewmodel.rememberMe) {
+                                            EmptyView()
                                         }
-                                    } label: {
-                                        Text("Forgot Password")
-                                    }
-                                    .frame(maxWidth: .infinity, alignment: Alignment.leading)
-                                    .foregroundColor(Color(hex: 0xFFAD3689))
-                                    .font(.system(size: 16, weight: .bold))
-                                    .multilineTextAlignment(.leading)
-                                    .padding(.horizontal, 0)
-                                    .padding(.bottom, 6)
-                                    .alert(viewmodel.forgotPasswordMessage, isPresented: $viewmodel.showForgotPasswordMessage) {
-                                        Button("OK", role: .cancel){}
-                                    }
+                                        .toggleStyle(CustomCheckboxToggleStyle())
 
-                                    
+                                        Text("Remember me")
+                                            .foregroundColor(Color(hex: 0xFFAD3689))
+                                            .font(.system(size: 16, weight: .bold))
+                                            .padding(.leading, 4)
+                                            .onTapGesture{
+                                                viewmodel.rememberMe.toggle()
+                                            }
+                                        Spacer()
+                                        Button {
+                                            if viewmodel.username.isValidEmail() {
+                                                viewmodel.emailErrorMessage = ""
+                                                viewmodel.sendForgotPassword()
+                                            } else {
+                                                viewmodel.emailErrorMessage = "Invalid email"
+                                            }
+                                        } label: {
+                                            Text("Forgot Password")
+                                                .foregroundColor(Color(hex: 0xFFAD3689))
+                                                .font(.system(size: 16, weight: .bold))
+                                                .lineLimit(1) // Ensures text stays on one line
+                                        }
+                                        .alert(viewmodel.forgotPasswordMessage, isPresented: $viewmodel.showForgotPasswordMessage) {
+                                            Button("OK", role: .cancel) {}
+                                        }
+                                    }
+                                    .frame(maxWidth: .infinity)
+
                                     VStack(spacing: verticleSpacing) {
                                         ZStack{
                                             Divider()
@@ -199,7 +211,6 @@ struct SignInScreen : View {
             }
         }
     }
-    
 }
 
 #Preview {
