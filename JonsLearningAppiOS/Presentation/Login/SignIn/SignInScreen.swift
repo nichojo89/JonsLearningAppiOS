@@ -53,7 +53,7 @@ struct SignInScreen : View {
                                 
                                 Text(viewmodel.emailErrorMessage)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(.red)
                                     .font(.system(size: 16))
                                     .padding(.bottom, 6)
                                 
@@ -66,7 +66,7 @@ struct SignInScreen : View {
                                     
                                 Text(viewmodel.passwordErrorMessage)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(.red)
                                     .font(.system(size: 16))
                                     
                                 HStack(spacing: 0) {
@@ -164,10 +164,21 @@ struct SignInScreen : View {
                                 } label: {
                                     Text("Sign in")
                                         .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .foregroundColor(.white) // Ensure text is visible
                                 }
                                 .disabled(viewmodel.isSigninDisabled)
-                                .buttonStyle(.borderedProminent)
-                                .buttonBorderShape(.capsule)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 0.5647, green: 0.1765, blue: 0.4431), // Darker purple
+                                            Color(red: 0.7059, green: 0.2118, blue: 0.5569)  // Lighter purple
+                                        ]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .clipShape(Capsule()) 
                                 
                             }
                             .frame(alignment: Alignment.bottom)
@@ -188,10 +199,15 @@ struct SignInScreen : View {
                 
             }
             .navigationDestination(for: String.self) { destination in
-                if destination == NavigationDestination.signUp{
-                    SignUpScreen()
-                } else if(destination == NavigationDestination.dashboard){
-                    DashboardScreen()
+                switch(destination) {
+                    case NavigationDestination.signUp:
+                        SignUpScreen()
+                    case NavigationDestination.dashboard:
+                        DashboardScreen()
+                    case NavigationDestination.emailVerification:
+                        EmailVerificationScreen()
+                    default:
+                        EmptyView()
                 }
             }
         }

@@ -20,7 +20,6 @@ class AppContainer {
     private init() {
         container = Container()
         
-        // Register NavigationState as a singleton
         container.register(NavigationState.self) { _ in
             return NavigationState()
         }.inObjectScope(.container)  // Changed to singleton
@@ -29,8 +28,6 @@ class AppContainer {
             TokenManager()
         }
         
-        // Remove NavigationPath registration since we're using NavigationState
-        
         container.register(FirebaseAuthenticator.self) { resolver in
             let tokenManager = resolver.resolve(TokenManager.self)!
             return FirebaseAuthenticator(tokenManager: tokenManager)
@@ -38,13 +35,13 @@ class AppContainer {
         
         container.register(SignInViewModel.self) { resolver in
             let authenticator = resolver.resolve(FirebaseAuthenticator.self)!
-            let navigationState = resolver.resolve(NavigationState.self)!  // Changed to let
+            let navigationState = resolver.resolve(NavigationState.self)!
             return SignInViewModel(authenticator: authenticator, navigationState: navigationState)
         }
         
         container.register(SignUpViewModel.self) { resolver in
             let authenticator = resolver.resolve(FirebaseAuthenticator.self)!
-            let navigationState = resolver.resolve(NavigationState.self)!  // Changed to let
+            let navigationState = resolver.resolve(NavigationState.self)!
             return SignUpViewModel(authenticator: authenticator, navigationState: navigationState)
         }
         

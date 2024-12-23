@@ -27,22 +27,11 @@ struct JonsLearningAppiOSApp: App {
             NavigationStack(path: $navigationState.path) {
                 if isLoggedIn {
                     DashboardScreen()
-                        .navigationDestination(for: String.self) { destination in
-                            if destination == NavigationDestination.signUp {
-                                SignUpScreen()
-                            }
-                        }
                 } else {
                     SignInScreen()
-                        .navigationDestination(for: String.self) { destination in
-                            if destination == NavigationDestination.signUp {
-                                SignUpScreen()
-                            } else if destination == NavigationDestination.dashboard {
-                                DashboardScreen()
-                            }
-                        }
                 }
             }
+            .navigationBarBackButtonHidden(true)
             .environmentObject(navigationState)
         }
     }

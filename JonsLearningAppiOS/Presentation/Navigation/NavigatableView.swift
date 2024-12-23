@@ -8,16 +8,18 @@ import SwiftUI
 
 struct NavigatableView<Content: View>: View {
     var title: String
+    var popToRoot: Bool
     var content: Content
     
-    init(title: String, @ViewBuilder content: () -> Content) {
+    init(title: String, popToRoot: Bool = false, @ViewBuilder content: () -> Content) {
         self.title = title
+        self.popToRoot = popToRoot
         self.content = content()
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBar(title: title)
+            CustomNavigationBar(title: title, popToRoot : popToRoot)
                 .zIndex(2)
             content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -26,10 +28,10 @@ struct NavigatableView<Content: View>: View {
     }
 }
 
-//struct NavigatableView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NavigatableView(title: "Home") {
-//            Color.red
-//        }
-//    }
-//}
+struct NavigatableView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigatableView(title: "Home", popToRoot: false) {
+            Color.red
+        }
+    }
+}

@@ -21,8 +21,6 @@ class SignUpViewModel: ObservableObject {
     @Published var passwordErrorMessage: String = ""
     @Published var isConfirmPasswordVisible: Bool = false
     @Published var confirmPasswordErrorMessage: String = ""
-    @Published var navigateToEmailVerification: Bool = false
-    @Published var navigateToDashboardScreen: Bool = false
     
     init(authenticator: FirebaseAuthenticator, navigationState: NavigationState) {
         self.authenticator = authenticator
@@ -31,7 +29,7 @@ class SignUpViewModel: ObservableObject {
     
     func showEmailVerification() -> Bool {
         if !self.authenticator.authUser!.isEmailVerified {
-            navigateToEmailVerification = true
+            navigationState.path.append(NavigationDestination.emailVerification)
             return true
         } else {
             //user should sign in or forgot password
@@ -97,7 +95,8 @@ class SignUpViewModel: ObservableObject {
         do {
             try await self.authenticator.googleOauth{ success in
                 if success {
-                    self.navigateToDashboardScreen = true
+                    self.navigationState.path.removeLast(self.navigationState.path.count)
+                    self.navigationState.path.append(NavigationDestination.dashboard)
                 } else {
                     self.passwordErrorMessage = "Google sign in failed"
                 }

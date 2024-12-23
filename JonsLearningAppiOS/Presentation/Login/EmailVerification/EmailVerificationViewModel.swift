@@ -10,12 +10,17 @@ import SwiftUI
 
 class EmailVerificationViewModel: ObservableObject {
     private var authenticator: FirebaseAuthenticator
+    @Published var sendEmailMessage = ""
     
-    
-    init(authenticator: FirebaseAuthenticator){
+    init(authenticator: FirebaseAuthenticator) {
         self.authenticator = authenticator
     }
-    func sendVerificationEmail(){
-        self.authenticator.sendVerificationEmail()
+    
+    func sendVerificationEmail() {
+        self.authenticator.sendVerificationEmail() { [weak self] message in
+            DispatchQueue.main.async {
+                self?.sendEmailMessage = message
+            }
+        }
     }
 }

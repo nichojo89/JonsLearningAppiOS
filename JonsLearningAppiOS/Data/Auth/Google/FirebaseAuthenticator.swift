@@ -11,7 +11,7 @@ import GoogleSignIn
 
 
 class FirebaseAuthenticator {
-    let authUser = Auth.auth().currentUser
+    var authUser = Auth.auth().currentUser
     private var tokenManager: TokenManager
     
     init(tokenManager: TokenManager) {
@@ -30,7 +30,7 @@ class FirebaseAuthenticator {
             } else {
                 if let token = authResult?.credential?.idToken {
                     self.tokenManager.storeToken(token, forKey: "OAuthToken")
-                    let test = self.tokenManager.retrieveToken(forKey: "OAuthToken")
+                    self.authUser = Auth.auth().currentUser
                 }
                 completion(FirebaseRegistrationResult(success: true, errorCode: nil))
             }
@@ -38,31 +38,47 @@ class FirebaseAuthenticator {
     }
     
     //MARK: Send verification email to unverified users
-    func sendVerificationEmail(){
+    func sendVerificationEmail(completion: @escaping(String) -> Void){
         if let user = authUser {
             if !user.isEmailVerified {
                 user.sendEmailVerification(completion: { (error) in
                     if error != nil {
-                        //resend email UI
+                        let firebaseError = self.getErrorDescription(error: error)
+                        completion(firebaseError)
+                    } else {
+                        completion("Verification email sent")
                     }
                 })
             }
         }
     }
     
-    func signIn(email: String, password: String){
+    func signIn(email: String, password: String, completion: @escaping(Bool, Bool, String?) -> Void){
         Auth.auth().signIn(withEmail: email, password: password) {  authResult, error in
-            if let err = error {
-                //TODO handle error
+            if let error  {
+                let errorMessage = self.getErrorDescription(error: error)
+                completion(false, true, errorMessage)
             } else {
-                self.authUser?.getIDToken() { idToken, error in
-                    if let error = error {
-                        // Handle error
-                        return;
+                self.authUser = Auth.auth().currentUser
+                if let user = self.authUser {
+                    if(!user.isEmailVerified){
+                        completion(true, false, nil)
+                    } else {
+                        user.getIDToken() { idToken, error in
+                            if let error = error {
+                                let errorMessage = self.getErrorDescription(error: error)
+                                completion(false, true, errorMessage)
+                            } else if let token = idToken {
+                                _ = self.tokenManager.storeToken(token, forKey: "OAuthToken")
+                                completion(true, true, nil)
+                                return
+                            } else {
+                                completion(false, true, "Authentication failed")
+                            }
+                        }
                     }
-                    if let token = idToken {
-                        self.tokenManager.storeToken(token, forKey: "OAuthToken")
-                    }
+                } else {
+                    completion(false, true, "User not found")
                 }
             }
         }
@@ -126,6 +142,47 @@ class FirebaseAuthenticator {
     func logout() async throws {
         GIDSignIn.sharedInstance.signOut()
         try Auth.auth().signOut()
+    }
+    
+    func getErrorDescription(error: Error?) -> String {
+        var errorMessage: String = ""
+        if let error {
+            let err = error as NSError
+            let firebaseError = AuthErrorCode(rawValue: err.code)
+            if let firebaseError {
+                switch firebaseError.code {
+                    case .wrongPassword:
+                        errorMessage = "The password is incorrect"
+                    case .invalidEmail:
+                        errorMessage = "The email address is badly formatted"
+                    case .userNotFound:
+                        errorMessage = "No user found with this email address"
+                    case .userDisabled:
+                        errorMessage = "This account has been disabled"
+                    case .networkError:
+                        errorMessage = "Network error"
+                    case .tooManyRequests:
+                        errorMessage = "Too many requests!"
+                    case .operationNotAllowed:
+                        errorMessage = "Sign-in method is not enabled"
+                    case .emailAlreadyInUse:
+                        errorMessage = "The email address is already in use"
+                    case .weakPassword:
+                        errorMessage = "The password is too weak"
+                    case .accountExistsWithDifferentCredential:
+                        errorMessage = "An account already exists with the same email address but different sign-in credentials"
+                    case .invalidCredential:
+                        errorMessage = "The provided credentials are invalid"
+                    case .requiresRecentLogin:
+                        errorMessage = "Please sign in again."
+                    case .invalidVerificationCode:
+                        errorMessage = "The verification code is invalid"
+                    default:
+                        errorMessage = "An error occurred"
+                }
+            }
+        }
+        return errorMessage
     }
     
 }

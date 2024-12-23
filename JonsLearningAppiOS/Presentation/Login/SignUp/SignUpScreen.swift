@@ -4,6 +4,7 @@
 //
 //  Created by Jon Nichols on 12/4/24.
 //
+
 import SwiftUI
 
 struct SignUpScreen : View {
@@ -25,7 +26,6 @@ struct SignUpScreen : View {
                         .edgesIgnoringSafeArea(.all)
                     
                     VStack {
-                        let logoHeight = geometry.size.height * 0.1
                         let verticleSpacing = geometry.size.height * 0.01
                         VStack {
                             //HERE
@@ -57,6 +57,7 @@ struct SignUpScreen : View {
                                     
                                     
                                     Text(viewmodel.emailErrorMessage)
+                                        .foregroundColor(.red)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .foregroundColor(.black)
                                         .font(.system(size: 16))
@@ -71,6 +72,7 @@ struct SignUpScreen : View {
                                         .autocorrectionDisabled(true)
                                         
                                     Text(viewmodel.passwordErrorMessage)
+                                        .foregroundColor(.red)
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .foregroundColor(.black)
                                         .font(.system(size: 16))
@@ -85,6 +87,7 @@ struct SignUpScreen : View {
                                                 .autocorrectionDisabled(true)
                                             
                                             Text(viewmodel.confirmPasswordErrorMessage)
+                                                .foregroundColor(.red)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                                 .foregroundColor(.black)
                                                 .font(.system(size: 16))
@@ -145,23 +148,32 @@ struct SignUpScreen : View {
                                                 viewmodel.navigationState.path.removeLast()
                                             }
                                     }
-                                        
                                     Button {
                                         viewmodel.signUp()
                                     } label: {
                                         Text("Sign up")
                                             .frame(maxWidth: .infinity)
+                                            .padding()
+                                            .foregroundColor(.white)
                                     }
                                     .disabled(viewmodel.isSignupDisabled)
-                                    .foregroundColor(Color(hex: 0xFFAD3689))
-                                    .buttonStyle(.borderedProminent)
-                                    .buttonBorderShape(.capsule)
+                                    .background(
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [
+                                                Color(red: 0.5647, green: 0.1765, blue: 0.4431), // Darker purple
+                                                Color(red: 0.7059, green: 0.2118, blue: 0.5569)  // Lighter purple
+                                            ]),
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .clipShape(Capsule())
+                                    .padding(.horizontal)
                                     
                                 }
                                 .frame(alignment: Alignment.bottom)
                                 .padding(20)
                             }
-                            
                         }
                         .padding(.top, 12)
                         .background(.white)
@@ -172,19 +184,16 @@ struct SignUpScreen : View {
                     
                 }
                 .navigationBarHidden(true)
-                .navigationDestination(isPresented: $viewmodel.navigateToEmailVerification){
-                    if viewmodel.navigateToEmailVerification {
+                .navigationDestination(for: String.self){ destination in
+                    if destination == NavigationDestination.emailVerification{
                         EmailVerificationScreen()
-                    }
-                }
-                .navigationDestination(isPresented: $viewmodel.navigateToDashboardScreen){
-                    if viewmodel.navigateToDashboardScreen {
+                    } else if(destination == NavigationDestination.dashboard){
                         DashboardScreen()
                     }
                 }
             }
             
-        }
+        }.navigationBarBackButtonHidden(true)
     }
 }
 

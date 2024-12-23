@@ -9,18 +9,20 @@ import SwiftUI
 
 struct CustomNavigationBar: View {
     var title: String
+    var popToRoot = false
     @State private var navigationState: NavigationState = AppContainer.shared.resolve(NavigationState.self)!
+    
     var body: some View {
         ZStack {
             Rectangle()
                        .fill(
                            LinearGradient(
-                               gradient: Gradient(colors: [
-                                   Color(red: 0.6, green: 0.2, blue: 0.6), // Darker purple
-                                   Color(red: 0.8, green: 0.3, blue: 0.8)  // Lighter purple
-                               ]),
-                               startPoint: .leading,
-                               endPoint: .trailing
+                            gradient: Gradient(colors: [
+                                Color(red: 0.5647, green: 0.1765, blue: 0.4431), // Darker purple
+                                Color(red: 0.7059, green: 0.2118, blue: 0.5569)   // Lighter purple
+                            ]),
+                            startPoint: .leading,
+                            endPoint: .trailing
                            )
                        )
             
@@ -40,14 +42,15 @@ struct CustomNavigationBar: View {
                             HStack(spacing: 4) {
                                 Image(systemName: "chevron.left")
                                     .resizable()
-                                    .frame(width: 10, height: 15)
+                                    .frame(width: 12, height: 24)
                                     .foregroundColor(.white)
-                                Text("Back")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 16))
+                                    .padding(.leading,8)
                             }.onTapGesture {
-                                //TODO only pop to root if askedto
-                                navigationState.path.removeLast()
+                                if(popToRoot){
+                                    navigationState.path.removeLast(navigationState.path.count)
+                                } else {
+                                    navigationState.path.removeLast()
+                                }
                             }
                         }
                         Spacer()
@@ -65,9 +68,9 @@ struct CustomNavigationBar: View {
                 .padding(.bottom, 4)
             }
         }
-        .frame(height: (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + 48) // Total height: status bar + nav bar
+        .frame(height: (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + 48)
     }
 }
-//#Preview {
-//    CustomNavigationBar(title: "Title")
-//}
+#Preview {
+    CustomNavigationBar(title: "Title", popToRoot: false)
+}

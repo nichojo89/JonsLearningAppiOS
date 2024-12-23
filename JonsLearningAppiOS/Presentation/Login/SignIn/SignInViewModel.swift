@@ -30,7 +30,21 @@ class SignInViewModel: ObservableObject {
     }
     
     func signIn() {
-        self.authenticator.signIn(email: username, password: password)
+        self.passwordErrorMessage = ""
+        self.authenticator.signIn(email: username, password: password){ success, emailVerified, error in
+            if(success){
+                if(emailVerified){
+                    if(self.navigationState.path.count > 0){
+                        self.navigationState.path.removeLast()
+                    }
+                    self.navigationState.path.append(NavigationDestination.dashboard)
+                } else {
+                    self.navigationState.path.append(NavigationDestination.emailVerification)
+                }
+            } else {
+                self.passwordErrorMessage = error ?? ""
+            }
+        }
     }
     
     func sendForgotPassword(){
@@ -43,11 +57,13 @@ class SignInViewModel: ObservableObject {
             self.showForgotPasswordMessage = true
         }
     }
+    
     @MainActor
     func googleOAuth() async {
         do {
             try await self.authenticator.googleOauth{ success in
                 if success {
+                    self.navigationState.path.removeLast()
                     self.navigationState.path.append(NavigationDestination.dashboard)
                 } else {
                     self.passwordErrorMessage = "Google sign in failed"
