@@ -7,8 +7,12 @@
 
 import Foundation
 import FirebaseAuth
+import SwiftUI
 
 class SignUpViewModel: ObservableObject {
+    private var authenticator: FirebaseAuthenticator
+    
+    @Published var navigationState: NavigationState
     @Published var username: String = ""
     @Published var password: String = ""
     @Published var confirmPassword: String = ""
@@ -20,8 +24,13 @@ class SignUpViewModel: ObservableObject {
     @Published var navigateToEmailVerification: Bool = false
     @Published var navigateToDashboardScreen: Bool = false
     
+    init(authenticator: FirebaseAuthenticator, navigationState: NavigationState) {
+        self.authenticator = authenticator
+        self.navigationState = navigationState
+    }
+    
     func showEmailVerification() -> Bool {
-        if !FirebaseAuthenticator.authUser!.isEmailVerified {
+        if !self.authenticator.authUser!.isEmailVerified {
             navigateToEmailVerification = true
             return true
         } else {
@@ -70,7 +79,7 @@ class SignUpViewModel: ObservableObject {
     func signUp(){
         if(username.isValidEmail() && !password.isEmpty){
             isSignupDisabled = true
-            FirebaseAuthenticator.register(email: username,password: password) { result in
+            self.authenticator.register(email: username,password: password) { result in
                 if result.success {
                     _ = self.showEmailVerification()
                 } else {
@@ -80,6 +89,21 @@ class SignUpViewModel: ObservableObject {
                 }
                 self.isSignupDisabled = false
             }
+        }
+    }
+    
+    @MainActor
+    func googleOAuth() async {
+        do {
+            try await self.authenticator.googleOauth{ success in
+                if success {
+                    self.navigateToDashboardScreen = true
+                } else {
+                    self.passwordErrorMessage = "Google sign in failed"
+                }
+            }
+        } catch {
+            
         }
     }
 }

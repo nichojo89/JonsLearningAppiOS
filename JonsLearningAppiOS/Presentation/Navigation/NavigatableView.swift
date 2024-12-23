@@ -26,10 +26,10 @@ struct NavigatableView<Content: View>: View {
     }
 }
 
-struct NavigatableView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigatableView(title: "Home") {
-            Color.red
-        }
-    }
-}
+//struct NavigatableView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigatableView(title: "Home") {
+//            Color.red
+//        }
+//    }
+//}

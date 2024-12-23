@@ -11,10 +11,15 @@ import GoogleSignIn
 
 
 class FirebaseAuthenticator {
-    static let authUser = Auth.auth().currentUser
+    let authUser = Auth.auth().currentUser
+    private var tokenManager: TokenManager
+    
+    init(tokenManager: TokenManager) {
+        self.tokenManager = TokenManager()
+    }
     
     //MARK: Register users with Firebase AD
-    static func register(email: String, password: String, completion: @escaping(FirebaseRegistrationResult) -> Void) {
+    func register(email: String, password: String, completion: @escaping(FirebaseRegistrationResult) -> Void) {
         
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
@@ -23,13 +28,17 @@ class FirebaseAuthenticator {
                     completion(FirebaseRegistrationResult(success: false, errorCode: authErrorCode))
                 }
             } else {
+                if let token = authResult?.credential?.idToken {
+                    self.tokenManager.storeToken(token, forKey: "OAuthToken")
+                    let test = self.tokenManager.retrieveToken(forKey: "OAuthToken")
+                }
                 completion(FirebaseRegistrationResult(success: true, errorCode: nil))
             }
         }
     }
     
     //MARK: Send verification email to unverified users
-    static func sendVerificationEmail(){
+    func sendVerificationEmail(){
         if let user = authUser {
             if !user.isEmailVerified {
                 user.sendEmailVerification(completion: { (error) in
@@ -41,27 +50,26 @@ class FirebaseAuthenticator {
         }
     }
     
-    static func signIn(email: String, password: String){
+    func signIn(email: String, password: String){
         Auth.auth().signIn(withEmail: email, password: password) {  authResult, error in
             if let err = error {
-                let wtf = 0
+                //TODO handle error
             } else {
-                authUser?.getIDToken() { idToken, error in
+                self.authUser?.getIDToken() { idToken, error in
                     if let error = error {
                         // Handle error
                         return;
                     }
-                    
-                    var token = idToken
-                    // Send token to your backend via HTTPS
-                    // ...
+                    if let token = idToken {
+                        self.tokenManager.storeToken(token, forKey: "OAuthToken")
+                    }
                 }
             }
         }
     }
     
     @MainActor
-    static func googleOauth(completion: @escaping(Bool) -> Void) async throws {
+    func googleOauth(completion: @escaping(Bool) -> Void) async throws {
         // google sign in
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             completion(false)
@@ -101,12 +109,15 @@ class FirebaseAuthenticator {
                 return;
             }
             
-            var token = idToken
+            if let token = idToken {
+                self.tokenManager.storeToken(token, forKey: "OAuthToken")
+                let test = self.tokenManager.retrieveToken(forKey: "OAuthToken")
+            }
             completion(true)
         }
     }
     
-    static func sendForgotPassword(email: String, completion: @escaping(Bool) -> Void){
+    func sendForgotPassword(email: String, completion: @escaping(Bool) -> Void){
         Auth.auth().sendPasswordReset(withEmail: email) { error in
             completion(error == nil)
         }

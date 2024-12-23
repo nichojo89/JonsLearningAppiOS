@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06636F762D188D6F001F9768 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 06636F752D188D6F001F9768 /* Swinject */; };
 		A9916C2C2D0625EB004C4D4A /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A9916C2B2D0625EB004C4D4A /* GoogleSignIn */; };
 		A9916C2E2D0625EB004C4D4A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A9916C2D2D0625EB004C4D4A /* GoogleSignInSwift */; };
 		A997F0EB2D02A1E900A07EF2 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A997F0EA2D02A1E900A07EF2 /* FirebaseAuth */; };
@@ -47,6 +48,7 @@
 			files = (
 				A9916C2C2D0625EB004C4D4A /* GoogleSignIn in Frameworks */,
 				A997F0EB2D02A1E900A07EF2 /* FirebaseAuth in Frameworks */,
+				06636F762D188D6F001F9768 /* Swinject in Frameworks */,
 				A997F0FB2D02AC4000A07EF2 /* FirebaseAuthCombine-Community in Frameworks */,
 				A9916C2E2D0625EB004C4D4A /* GoogleSignInSwift in Frameworks */,
 				A997F0FD2D02AC4000A07EF2 /* FirebaseCore in Frameworks */,
@@ -99,6 +101,8 @@
 				A997F0FC2D02AC4000A07EF2 /* FirebaseCore */,
 				A9916C2B2D0625EB004C4D4A /* GoogleSignIn */,
 				A9916C2D2D0625EB004C4D4A /* GoogleSignInSwift */,
+				06636F752D188D6F001F9768 /* Swinject */,
+				06636F772D188D6F001F9768 /* Swinject-Dynamic */,
 			);
 			productName = JonsLearningAppiOS;
 			productReference = A9B7441C2D0146E90096BEDF /* JonsLearningAppiOS.app */;
@@ -131,6 +135,7 @@
 			packageReferences = (
 				A997F0E92D02A1E900A07EF2 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				A9916C2A2D0625EB004C4D4A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				06636F742D188D6F001F9768 /* XCRemoteSwiftPackageReference "Swinject" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A9B7441D2D0146E90096BEDF /* Products */;
@@ -364,6 +369,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		06636F742D188D6F001F9768 /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.1;
+			};
+		};
 		A9916C2A2D0625EB004C4D4A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -383,6 +396,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		06636F752D188D6F001F9768 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 06636F742D188D6F001F9768 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+		06636F772D188D6F001F9768 /* Swinject-Dynamic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 06636F742D188D6F001F9768 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = "Swinject-Dynamic";
+		};
 		A9916C2B2D0625EB004C4D4A /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A9916C2A2D0625EB004C4D4A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;

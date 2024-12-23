@@ -20,13 +20,30 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct JonsLearningAppiOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var isLoggedIn = false
+    @StateObject private var navigationState = AppContainer.shared.resolve(NavigationState.self)!
+    
     var body: some Scene {
         WindowGroup {
-            if isLoggedIn {
-                DashboardScreen()
-            } else {
-                SignInScreen()
+            NavigationStack(path: $navigationState.path) {
+                if isLoggedIn {
+                    DashboardScreen()
+                        .navigationDestination(for: String.self) { destination in
+                            if destination == NavigationDestination.signUp {
+                                SignUpScreen()
+                            }
+                        }
+                } else {
+                    SignInScreen()
+                        .navigationDestination(for: String.self) { destination in
+                            if destination == NavigationDestination.signUp {
+                                SignUpScreen()
+                            } else if destination == NavigationDestination.dashboard {
+                                DashboardScreen()
+                            }
+                        }
+                }
             }
+            .environmentObject(navigationState)
         }
     }
 }

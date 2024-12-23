@@ -7,8 +7,11 @@
 import SwiftUI
 
 struct EmailVerificationScreen: View {
-    @ObservedObject private var viewmodel = EmailVerificationViewModel()
+    @ObservedObject private var viewmodel : EmailVerificationViewModel
     
+    init() {
+        viewmodel = AppContainer.shared.resolve(EmailVerificationViewModel.self)!
+    }
     var body: some View {
         NavigationView {
             NavigatableView(title: "Verification"){
@@ -25,7 +28,7 @@ struct EmailVerificationScreen: View {
                             .frame(width: geometry.size.width / 3,height: geometry.size.width / 3)
                         Spacer()
                         Button {
-                            //
+                            viewmodel.sendVerificationEmail()
                         } label: {
                             Text("Sign up")
                                 .frame(maxWidth: .infinity)
@@ -46,6 +49,6 @@ struct EmailVerificationScreen: View {
     }
 }
 
-#Preview {
-    EmailVerificationScreen()
-}
+//#Preview {
+//    EmailVerificationScreen()
+//}

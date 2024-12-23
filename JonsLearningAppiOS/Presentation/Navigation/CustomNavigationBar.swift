@@ -9,8 +9,7 @@ import SwiftUI
 
 struct CustomNavigationBar: View {
     var title: String
-    @Environment(\.presentationMode) var presentation
-    
+    @State private var navigationState: NavigationState = AppContainer.shared.resolve(NavigationState.self)!
     var body: some View {
         ZStack {
             Rectangle()
@@ -27,13 +26,9 @@ struct CustomNavigationBar: View {
             
             // Content
             VStack(spacing: 0) {
-                // Add padding for status bar
                 Color.clear
                     .frame(height: UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0)
-                
-                // Navigation bar content
                 ZStack {
-                    // Back button aligned to left
                     HStack {
                         Button(action: {
                             if let presentationMode = UIApplication.shared.currentViewController?.navigationController?.viewControllers {
@@ -51,28 +46,28 @@ struct CustomNavigationBar: View {
                                     .foregroundColor(.white)
                                     .font(.system(size: 16))
                             }.onTapGesture {
-                                self.presentation.wrappedValue.dismiss()
+                                //TODO only pop to root if askedto
+                                navigationState.path.removeLast()
                             }
                         }
                         Spacer()
                     }
                     .padding(.leading, 16)
-                    .zIndex(1) // Ensure back button is on top
+                    .zIndex(1)
                     
-                    // Title centered
                     Text(title)
                         .font(.title)
                         .bold()
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                 }
-                .frame(height: 44) // Fixed navigation bar height
+                .frame(height: 44)
                 .padding(.bottom, 4)
             }
         }
         .frame(height: (UIApplication.shared.windows.first?.safeAreaInsets.top ?? 0) + 48) // Total height: status bar + nav bar
     }
 }
-#Preview {
-    CustomNavigationBar(title: "Title")
-}
+//#Preview {
+//    CustomNavigationBar(title: "Title")
+//}

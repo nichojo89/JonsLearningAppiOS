@@ -6,35 +6,55 @@
 //
 
 import Foundation
+import SwiftUI
 
 class SignInViewModel: ObservableObject {
+    private let authenticator: FirebaseAuthenticator
+    @Published var navigationState: NavigationState
     @Published var username: String = ""
     @Published var password: String = ""
+    @Published var rememberMe: Bool = true
     @Published var isSigninDisabled: Bool = true
     @Published var emailErrorMessage: String = ""
     @Published var passwordErrorMessage: String = ""
-    @Published var navigateToDashboard: Bool = false
-    @Published var navigateToCreateAccount: Bool = false
-    @Published var showForgotPasswordMessage: Bool = false
     @Published var forgotPasswordMessage: String = ""
-    @Published var rememberMe: Bool = true
+    @Published var showForgotPasswordMessage: Bool = false
+    
+    init(authenticator: FirebaseAuthenticator, navigationState: NavigationState) {
+        self.authenticator = authenticator
+        self.navigationState = navigationState
+    }
     
     func validateCredentials() {
         isSigninDisabled =  !username.isValidEmail() || password.isEmpty
     }
     
     func signIn() {
-        FirebaseAuthenticator.signIn(email: username, password: password)
+        self.authenticator.signIn(email: username, password: password)
     }
     
     func sendForgotPassword(){
-        FirebaseAuthenticator.sendForgotPassword(email: username) { success in
+        self.authenticator.sendForgotPassword(email: username) { success in
             if success {
                 self.forgotPasswordMessage = "Password recovery email sent!"
             } else {
                 self.forgotPasswordMessage = "Failed to send password recovery"
             }
             self.showForgotPasswordMessage = true
+        }
+    }
+    @MainActor
+    func googleOAuth() async {
+        do {
+            try await self.authenticator.googleOauth{ success in
+                if success {
+                    self.navigationState.path.append(NavigationDestination.dashboard)
+                } else {
+                    self.passwordErrorMessage = "Google sign in failed"
+                }
+            }
+        } catch {
+            
         }
     }
 }

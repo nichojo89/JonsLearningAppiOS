@@ -6,9 +6,16 @@
 //
 
 import Foundation
+import SwiftUI
 
 class EmailVerificationViewModel: ObservableObject {
+    private var authenticator: FirebaseAuthenticator
+    
+    
+    init(authenticator: FirebaseAuthenticator){
+        self.authenticator = authenticator
+    }
     func sendVerificationEmail(){
-        FirebaseAuthenticator.sendVerificationEmail()
+        self.authenticator.sendVerificationEmail()
     }
 }
