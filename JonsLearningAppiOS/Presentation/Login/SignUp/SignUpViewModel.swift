@@ -27,16 +27,6 @@ class SignUpViewModel: ObservableObject {
         self.navigationState = navigationState
     }
     
-    func showEmailVerification() -> Bool {
-        if !self.authenticator.authUser!.isEmailVerified {
-            navigationState.path.append(NavigationDestination.emailVerification)
-            return true
-        } else {
-            //user should sign in or forgot password
-            return false
-        }
-    }
-    
     func validateCredentials() {
         let shouldShowPasswordMismatch = !password.isEmpty && !confirmPassword.isEmpty && password != confirmPassword
         
@@ -52,10 +42,7 @@ class SignUpViewModel: ObservableObject {
     func showAuthError(authErrorCode : AuthErrorCode){
         switch authErrorCode {
         case .emailAlreadyInUse:
-            if !showEmailVerification() {
-                emailErrorMessage = "Email already in use"
-            }
-            emailErrorMessage = ""
+            emailErrorMessage = "Email already in use"
             passwordErrorMessage = ""
         case .invalidEmail:
             emailErrorMessage = "Invalid email"
@@ -79,7 +66,7 @@ class SignUpViewModel: ObservableObject {
             isSignupDisabled = true
             self.authenticator.register(email: username,password: password) { result in
                 if result.success {
-                    _ = self.showEmailVerification()
+                    self.navigationState.path.append(NavigationDestination.emailVerification)
                 } else {
                     if let err = result.errorCode {
                         self.showAuthError(authErrorCode: err)

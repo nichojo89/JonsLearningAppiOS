@@ -158,14 +158,23 @@ struct SignUpScreen : View {
                                     }
                                     .disabled(viewmodel.isSignupDisabled)
                                     .background(
-                                        LinearGradient(
-                                            gradient: Gradient(colors: [
-                                                Color(red: 0.5647, green: 0.1765, blue: 0.4431), // Darker purple
-                                                Color(red: 0.7059, green: 0.2118, blue: 0.5569)  // Lighter purple
-                                            ]),
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
+                                        viewmodel.isSignupDisabled
+                                                ? LinearGradient(
+                                                    gradient: Gradient(colors: [
+                                                        Color(red: 0.8314, green: 0.5569, blue: 0.8431), // Very light purple
+                                                        Color(red: 0.9059, green: 0.6824, blue: 0.9059)  // Softer light purple
+                                                    ]),
+                                                    startPoint: .leading,
+                                                    endPoint: .trailing
+                                                )
+                                                : LinearGradient(
+                                                    gradient: Gradient(colors: [
+                                                        Color(red: 0.5647, green: 0.1765, blue: 0.4431), // Darker purple
+                                                        Color(red: 0.7059, green: 0.2118, blue: 0.5569)  // Lighter purple
+                                                    ]),
+                                                    startPoint: .leading,
+                                                    endPoint: .trailing
+                                                )
                                     )
                                     .clipShape(Capsule())
                                     .padding(.horizontal)

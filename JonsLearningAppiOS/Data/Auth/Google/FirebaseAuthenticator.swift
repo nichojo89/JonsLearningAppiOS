@@ -28,10 +28,6 @@ class FirebaseAuthenticator {
                     completion(FirebaseRegistrationResult(success: false, errorCode: authErrorCode))
                 }
             } else {
-                if let token = authResult?.credential?.idToken {
-                    self.tokenManager.storeToken(token, forKey: "OAuthToken")
-                    self.authUser = Auth.auth().currentUser
-                }
                 completion(FirebaseRegistrationResult(success: true, errorCode: nil))
             }
         }
@@ -85,51 +81,78 @@ class FirebaseAuthenticator {
     }
     
     @MainActor
-    func googleOauth(completion: @escaping(Bool) -> Void) async throws {
-        // google sign in
+    func googleOauth(completion: @escaping (Bool) -> Void) async throws {
         guard let clientID = FirebaseApp.app()?.options.clientID else {
             completion(false)
-            fatalError("no firbase clientID found")
+            fatalError("No Firebase clientID found")
         }
         
-        // Create Google Sign In configuration object.
         let config = GIDConfiguration(clientID: clientID)
         GIDSignIn.sharedInstance.configuration = config
         
-        //get rootView
+        // Get root view controller
         let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        guard let rootViewController = scene?.windows.first?.rootViewController
-        else {
+        guard let rootViewController = scene?.windows.first?.rootViewController else {
             completion(false)
             fatalError("There is no root view controller!")
         }
         
-        //google sign in authentication response
-        let result = try await GIDSignIn.sharedInstance.signIn(
-            withPresenting: rootViewController
-        )
-        let user = result.user
-        guard let idToken = user.idToken?.tokenString else {
+        do {
+            // Google sign in authentication response
+            let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
+            let user = result.user
+            guard let idToken = user.idToken?.tokenString else {
+                completion(false)
+                throw AuthenticationError.runtimeError("Unexpected error occurred, please retry")
+            }
+            
+            // Firebase auth
+            let credential = GoogleAuthProvider.credential(
+                withIDToken: idToken, accessToken: user.accessToken.tokenString
+            )
+            let authResult = try await Auth.auth().signIn(with: credential)
+            
+            // Get Firebase ID token - This is what you should send to your backend
+            let firebaseToken = try await authResult.user.getIDToken()
+            print("Firebase Token: \(firebaseToken)") // Use this token for your backend
+            _ = tokenManager.storeToken(firebaseToken, forKey: "OAuthToken")
+            completion(true)
+        } catch {
+            print("Google sign-in failed: \(error.localizedDescription)")
             completion(false)
-            throw AuthenticationError.runtimeError("Unexpected error occurred, please retry")
+            throw error
+        }
+    }
+
+    // MARK: - Token Refresh Method
+    func refreshFirebaseToken(completion: @escaping (Bool) -> Void) async throws {
+        guard let currentUser = Auth.auth().currentUser else {
+            print("No authenticated user found.")
+            completion(false)
+            return
         }
         
-        //Firebase auth
-        let credential = GoogleAuthProvider.credential(
-            withIDToken: idToken, accessToken: user.accessToken.tokenString
-        )
-        try await Auth.auth().signIn(with: credential)
-        authUser?.getIDToken() { idToken, error in
+        currentUser.getIDToken { idToken, error in
             if let error = error {
+                print("Error retrieving ID Token: \(error.localizedDescription)")
+                // Handle reauthentication if necessary
+                if let authError = error as NSError?,
+                   authError.code == AuthErrorCode.userTokenExpired.rawValue {
+                    print("Token expired. User needs to reauthenticate.")
+                    // You can call a reauthentication flow here if needed
+                }
                 completion(false)
-                return;
+                return
             }
             
             if let token = idToken {
-                self.tokenManager.storeToken(token, forKey: "OAuthToken")
-                let test = self.tokenManager.retrieveToken(forKey: "OAuthToken")
+                _ = self.tokenManager.storeToken(token, forKey: "OAuthToken")
+                print("Stored OAuth token successfully")
+                completion(true)
+            } else {
+                print("Failed to retrieve a valid token.")
+                completion(false)
             }
-            completion(true)
         }
     }
     

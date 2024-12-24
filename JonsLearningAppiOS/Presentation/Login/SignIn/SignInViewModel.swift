@@ -24,6 +24,17 @@ class SignInViewModel: ObservableObject {
         self.authenticator = authenticator
         self.navigationState = navigationState
     }
+    //TODO Implement use cases
+    
+    func refreshToken() async throws{
+        do {
+            try await authenticator.refreshFirebaseToken{ canUserSignIn in
+                
+            }
+        } catch {
+            print("Refresh token failed")
+        }
+    }
     
     func validateCredentials() {
         isSigninDisabled =  !username.isValidEmail() || password.isEmpty
@@ -63,7 +74,9 @@ class SignInViewModel: ObservableObject {
         do {
             try await self.authenticator.googleOauth{ success in
                 if success {
-                    self.navigationState.path.removeLast()
+                    if(self.navigationState.path.count > 0){
+                        self.navigationState.path.removeLast()
+                    }
                     self.navigationState.path.append(NavigationDestination.dashboard)
                 } else {
                     self.passwordErrorMessage = "Google sign in failed"
