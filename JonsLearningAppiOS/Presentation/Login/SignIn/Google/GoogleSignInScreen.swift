@@ -14,6 +14,7 @@ struct GoogleSignInScreen: View {
             VStack {
                 if userLoggedIn {
                     DashboardScreen()
+                        .navigationBarBackButtonHidden(true)
                 }
             }.onAppear{
                 //Firebase state change listeneer

@@ -66,6 +66,7 @@ class FirebaseAuthenticator {
                                 completion(false, true, errorMessage)
                             } else if let token = idToken {
                                 _ = self.tokenManager.storeToken(token, forKey: "OAuthToken")
+                                UserDefaults.standard.set(true, forKey: "isSignedIn")
                                 completion(true, true, nil)
                                 return
                             } else {
@@ -116,6 +117,7 @@ class FirebaseAuthenticator {
             let firebaseToken = try await authResult.user.getIDToken()
             print("Firebase Token: \(firebaseToken)") // Use this token for your backend
             _ = tokenManager.storeToken(firebaseToken, forKey: "OAuthToken")
+            UserDefaults.standard.set(true, forKey: "isSignedIn")
             completion(true)
         } catch {
             print("Google sign-in failed: \(error.localizedDescription)")
@@ -147,6 +149,7 @@ class FirebaseAuthenticator {
             
             if let token = idToken {
                 _ = self.tokenManager.storeToken(token, forKey: "OAuthToken")
+                UserDefaults.standard.set(true, forKey: "isSignedIn")
                 print("Stored OAuth token successfully")
                 completion(true)
             } else {

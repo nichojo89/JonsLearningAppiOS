@@ -48,6 +48,7 @@ class SignInViewModel: ObservableObject {
                     if(self.navigationState.path.count > 0){
                         self.navigationState.path.removeLast()
                     }
+                    self.navigationState.path.removeLast()
                     self.navigationState.path.append(NavigationDestination.dashboard)
                 } else {
                     self.navigationState.path.append(NavigationDestination.emailVerification)

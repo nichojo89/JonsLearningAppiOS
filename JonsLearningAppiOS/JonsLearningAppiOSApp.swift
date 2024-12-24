@@ -19,12 +19,13 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct JonsLearningAppiOSApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @State private var isLoggedIn = false
+    
     @StateObject private var navigationState = AppContainer.shared.resolve(NavigationState.self)!
     
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $navigationState.path) {
+                let isLoggedIn = UserDefaults.standard.bool(forKey: "isSignedIn")
                 if isLoggedIn {
                     DashboardScreen()
                 } else {

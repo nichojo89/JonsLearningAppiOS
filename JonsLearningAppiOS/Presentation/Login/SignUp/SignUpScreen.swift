@@ -198,6 +198,7 @@ struct SignUpScreen : View {
                         EmailVerificationScreen()
                     } else if(destination == NavigationDestination.dashboard){
                         DashboardScreen()
+                            .navigationBarBackButtonHidden(true)
                     }
                 }
             }
