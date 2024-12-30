@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		06636F762D188D6F001F9768 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 06636F752D188D6F001F9768 /* Swinject */; };
+		0686EB902D235E8300314A62 /* Swinject-Dynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 06636F772D188D6F001F9768 /* Swinject-Dynamic */; };
 		A9916C2C2D0625EB004C4D4A /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A9916C2B2D0625EB004C4D4A /* GoogleSignIn */; };
 		A9916C2E2D0625EB004C4D4A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A9916C2D2D0625EB004C4D4A /* GoogleSignInSwift */; };
 		A997F0EB2D02A1E900A07EF2 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A997F0EA2D02A1E900A07EF2 /* FirebaseAuth */; };
@@ -15,6 +16,20 @@
 		A997F0FB2D02AC4000A07EF2 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = A997F0FA2D02AC4000A07EF2 /* FirebaseAuthCombine-Community */; };
 		A997F0FD2D02AC4000A07EF2 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = A997F0FC2D02AC4000A07EF2 /* FirebaseCore */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0686EB912D235E8300314A62 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0686EB902D235E8300314A62 /* Swinject-Dynamic in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A9B7441C2D0146E90096BEDF /* JonsLearningAppiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JonsLearningAppiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +100,7 @@
 				A9B744182D0146E90096BEDF /* Sources */,
 				A9B744192D0146E90096BEDF /* Frameworks */,
 				A9B7441A2D0146E90096BEDF /* Resources */,
+				0686EB912D235E8300314A62 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
