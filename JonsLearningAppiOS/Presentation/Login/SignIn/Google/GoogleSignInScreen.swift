@@ -13,7 +13,9 @@ struct GoogleSignInScreen: View {
         var body: some View {
             VStack {
                 if userLoggedIn {
-                    DashboardScreen()
+//                    DashboardScreen()
+//                        .navigationBarBackButtonHidden(true)
+                    CharacterGenerationScreen()
                         .navigationBarBackButtonHidden(true)
                 }
             }.onAppear{

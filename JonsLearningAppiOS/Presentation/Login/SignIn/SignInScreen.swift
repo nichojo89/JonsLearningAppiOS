@@ -216,6 +216,9 @@ struct SignInScreen : View {
                         .navigationBarBackButtonHidden(true)
                     case NavigationDestination.emailVerification:
                         EmailVerificationScreen()
+                    case NavigationDestination.character_generation:
+                        CharacterGenerationScreen()
+                        .navigationBarBackButtonHidden(true)
                     default:
                         EmptyView()
                 }

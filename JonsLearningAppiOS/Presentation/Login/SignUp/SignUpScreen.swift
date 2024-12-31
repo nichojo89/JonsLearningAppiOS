@@ -194,11 +194,16 @@ struct SignUpScreen : View {
                 }
                 .navigationBarHidden(true)
                 .navigationDestination(for: String.self){ destination in
-                    if destination == NavigationDestination.emailVerification{
+                    switch(destination) {
+                    case NavigationDestination.emailVerification:
                         EmailVerificationScreen()
-                    } else if(destination == NavigationDestination.dashboard){
+                    case NavigationDestination.dashboard:
                         DashboardScreen()
                             .navigationBarBackButtonHidden(true)
+                    case NavigationDestination.character_generation:
+                        CharacterGenerationScreen()
+                    default:
+                        EmptyView()
                     }
                 }
             }

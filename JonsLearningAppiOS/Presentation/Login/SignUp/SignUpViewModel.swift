@@ -83,7 +83,8 @@ class SignUpViewModel: ObservableObject {
             try await self.authenticator.googleOauth{ success in
                 if success {
                     self.navigationState.path.removeLast(self.navigationState.path.count)
-                    self.navigationState.path.append(NavigationDestination.dashboard)
+                    //self.navigationState.path.append(NavigationDestination.dashboard)
+                    self.navigationState.path.append(NavigationDestination.character_generation)
                 } else {
                     self.passwordErrorMessage = "Google sign in failed"
                 }
