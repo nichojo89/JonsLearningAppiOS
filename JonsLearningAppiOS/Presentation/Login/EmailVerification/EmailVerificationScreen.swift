@@ -65,6 +65,6 @@ struct EmailVerificationScreen: View {
     }
 }
 
-//#Preview {
-//    EmailVerificationScreen()
-//}
+#Preview {
+    EmailVerificationScreen()
+}

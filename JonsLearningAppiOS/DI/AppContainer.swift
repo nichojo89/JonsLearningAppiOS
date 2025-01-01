@@ -49,6 +49,10 @@ class AppContainer {
             let authenticator = resolver.resolve(FirebaseAuthenticator.self)!
             return EmailVerificationViewModel(authenticator: authenticator)
         }
+        
+        container.register(CharacterGenerationViewmodel.self) { resolver in
+            return CharacterGenerationViewmodel()
+        }
     }
     
     func resolve<T>(_ type: T.Type) -> T? {

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		06636F762D188D6F001F9768 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 06636F752D188D6F001F9768 /* Swinject */; };
-		0686EB902D235E8300314A62 /* Swinject-Dynamic in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 06636F772D188D6F001F9768 /* Swinject-Dynamic */; };
 		A9916C2C2D0625EB004C4D4A /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A9916C2B2D0625EB004C4D4A /* GoogleSignIn */; };
 		A9916C2E2D0625EB004C4D4A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A9916C2D2D0625EB004C4D4A /* GoogleSignInSwift */; };
 		A997F0EB2D02A1E900A07EF2 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A997F0EA2D02A1E900A07EF2 /* FirebaseAuth */; };
@@ -24,7 +23,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0686EB902D235E8300314A62 /* Swinject-Dynamic in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,7 +116,6 @@
 				A9916C2B2D0625EB004C4D4A /* GoogleSignIn */,
 				A9916C2D2D0625EB004C4D4A /* GoogleSignInSwift */,
 				06636F752D188D6F001F9768 /* Swinject */,
-				06636F772D188D6F001F9768 /* Swinject-Dynamic */,
 			);
 			productName = JonsLearningAppiOS;
 			productReference = A9B7441C2D0146E90096BEDF /* JonsLearningAppiOS.app */;
@@ -416,11 +413,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 06636F742D188D6F001F9768 /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
-		};
-		06636F772D188D6F001F9768 /* Swinject-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 06636F742D188D6F001F9768 /* XCRemoteSwiftPackageReference "Swinject" */;
-			productName = "Swinject-Dynamic";
 		};
 		A9916C2B2D0625EB004C4D4A /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;

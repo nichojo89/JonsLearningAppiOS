@@ -2,30 +2,36 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera to take photos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to select photos.</string>
+	<key></key>
+	<string></string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-        		<key>CFBundleTypeRole</key>
-        		<string>Editor</string>
-        			<key>CFBundleURLSchemes</key>
-        		<array>
-            			<string>***Your bundle ID***</string>
-        		</array>
-    		</dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>***Your bundle ID***</string>
+			</array>
+		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
-        		<string>Editor</string>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>96883020390-34jil8r13c1ecmulo3j6d4mlfgoohul4.apps.googleusercontent.com</string>
 		</dict>
-    		<dict>
-        		<key>CFBundleTypeRole</key>
-        			<string>Editor</string>
-        		<key>CFBundleURLSchemes</key>
-        		<array>
-            			<string>com.googleusercontent.apps.96883020390-34jil8r13c1ecmulo3j6d4mlfgoohul4</string>
-        		</array>
-    		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.96883020390-34jil8r13c1ecmulo3j6d4mlfgoohul4</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
