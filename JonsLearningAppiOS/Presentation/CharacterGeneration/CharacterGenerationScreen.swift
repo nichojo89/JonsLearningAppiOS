@@ -55,7 +55,13 @@ struct CharacterGenerationScreen: View {
                         Spacer()
 
                         Button {
-                            //TODO Generate image
+                            Task {
+                                do {
+                                    _ = try await viewmodel.generateCharacter()
+                                } catch {
+                                    print("HTTP Error: \(error)")
+                                }
+                            }
                         } label: {
                             Text("Generate")
                                 .frame(maxWidth: .infinity)

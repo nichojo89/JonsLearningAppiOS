@@ -24,17 +24,6 @@ class SignInViewModel: ObservableObject {
         self.authenticator = authenticator
         self.navigationState = navigationState
     }
-    //TODO Implement use cases
-    
-    func refreshToken() async throws{
-        do {
-            try await authenticator.refreshFirebaseToken{ canUserSignIn in
-                
-            }
-        } catch {
-            print("Refresh token failed")
-        }
-    }
     
     func validateCredentials() {
         isSigninDisabled =  !username.isValidEmail() || password.isEmpty

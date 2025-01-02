@@ -32,6 +32,15 @@ class AppContainer {
             let tokenManager = resolver.resolve(TokenManager.self)!
             return FirebaseAuthenticator(tokenManager: tokenManager)
         }
+        container.register(Img2ImgUseCase.self) { resolver in
+            let httpClient = resolver.resolve(HTTPClient.self)!
+            return Img2ImgUseCaseImpl(httpClient: httpClient)
+        }
+        
+        container.register(HTTPClient.self) { resolver in
+            let authenticator = resolver.resolve(FirebaseAuthenticator.self)!
+            return HTTPClient(authenticator: authenticator)
+        }
         
         container.register(SignInViewModel.self) { resolver in
             let authenticator = resolver.resolve(FirebaseAuthenticator.self)!
@@ -51,7 +60,8 @@ class AppContainer {
         }
         
         container.register(CharacterGenerationViewmodel.self) { resolver in
-            return CharacterGenerationViewmodel()
+            let img2ImgUseCase = resolver.resolve(Img2ImgUseCase.self)!
+            return CharacterGenerationViewmodel(img2ImgUseCase: img2ImgUseCase)
         }
     }
     

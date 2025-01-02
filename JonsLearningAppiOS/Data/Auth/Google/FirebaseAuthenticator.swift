@@ -8,7 +8,7 @@
 import FirebaseAuth
 import FirebaseCore
 import GoogleSignIn
-
+import Foundation
 
 class FirebaseAuthenticator {
     var authUser = Auth.auth().currentUser
@@ -127,10 +127,10 @@ class FirebaseAuthenticator {
     }
 
     // MARK: - Token Refresh Method
-    func refreshFirebaseToken(completion: @escaping (Bool) -> Void) async throws {
+    func refreshFirebaseToken(completion: @escaping (Bool, String?) -> Void) async throws {
         guard let currentUser = Auth.auth().currentUser else {
             print("No authenticated user found.")
-            completion(false)
+            completion(false, "")
             return
         }
         
@@ -143,7 +143,7 @@ class FirebaseAuthenticator {
                     print("Token expired. User needs to reauthenticate.")
                     // You can call a reauthentication flow here if needed
                 }
-                completion(false)
+                completion(false, "")
                 return
             }
             
@@ -151,10 +151,10 @@ class FirebaseAuthenticator {
                 _ = self.tokenManager.storeToken(token, forKey: "OAuthToken")
                 UserDefaults.standard.set(true, forKey: "isSignedIn")
                 print("Stored OAuth token successfully")
-                completion(true)
+                completion(true, token)
             } else {
                 print("Failed to retrieve a valid token.")
-                completion(false)
+                completion(false, "")
             }
         }
     }
@@ -211,6 +211,27 @@ class FirebaseAuthenticator {
         return errorMessage
     }
     
+    func getToken(completion: @escaping(String, Bool) -> ()) async throws {
+        let token = tokenManager.retrieveToken(forKey: "OAuthToken")
+        if let token {
+            if tokenManager.isTokenValid(token: token) {
+                completion(token, true)
+            } else {
+                do {
+                    try await refreshFirebaseToken { success, token in
+                        if let token {
+                            completion(token, true)
+                        } else {
+                            completion("", false)
+                        }
+                    }
+                } catch {
+                    completion("", false)
+                }
+            }
+        }
+        
+    }
 }
 
 enum AuthenticationError: Error {
