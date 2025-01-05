@@ -200,8 +200,8 @@ struct SignUpScreen : View {
                     case NavigationDestination.dashboard:
                         DashboardScreen()
                             .navigationBarBackButtonHidden(true)
-                    case NavigationDestination.character_generation:
-                        CharacterGenerationScreen()
+                    case NavigationDestination.image_generation:
+                        ImageGenerationScreen()
                     default:
                         EmptyView()
                     }

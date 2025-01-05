@@ -10,5 +10,6 @@ struct NavigationDestination {
     static let signUp = "SIGN_UP"
     static let emailVerification = "EMAIL_VERIFICATION"
     static let dashboard = "DASHBOARD"
-    static let character_generation = "CHARACTER_GENERATION"
+    static let image_generation = "IMAGE_GENERATION"
+    static let image_preview = "IMAGE_PREVIEW"
 }

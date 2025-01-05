@@ -15,7 +15,7 @@ struct GoogleSignInScreen: View {
                 if userLoggedIn {
 //                    DashboardScreen()
 //                        .navigationBarBackButtonHidden(true)
-                    CharacterGenerationScreen()
+                    ImageGenerationScreen()
                         .navigationBarBackButtonHidden(true)
                 }
             }.onAppear{

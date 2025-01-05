@@ -8,10 +8,6 @@
 import Swinject
 import SwiftUI
 
-class NavigationState: ObservableObject {
-    @Published var path = NavigationPath()
-}
-
 // AppContainer.swift
 class AppContainer {
     static let shared = AppContainer()
@@ -64,14 +60,24 @@ class AppContainer {
             return EmailVerificationViewModel(authenticator: authenticator)
         }
         
-        container.register(CharacterGenerationViewmodel.self) { resolver in
+        container.register(ImageGenerationViewmodel.self) { resolver in
+            let navigationState = resolver.resolve(NavigationState.self)!
             let img2ImgUseCase = resolver.resolve(Img2ImgUseCase.self)!
             let txt2ImgUseCase = resolver.resolve(Txt2ImgUseCase.self)!
-            return CharacterGenerationViewmodel(img2ImgUseCase: img2ImgUseCase, txt2ImgUseCase: txt2ImgUseCase)
+            return ImageGenerationViewmodel(navigationState: navigationState, img2ImgUseCase: img2ImgUseCase, txt2ImgUseCase: txt2ImgUseCase)
+        }
+        .inObjectScope(.container) 
+        
+        container.register(ImagePreviewViewmodel.self) { resolver, image in
+            return ImagePreviewViewmodel(image: image)
         }
     }
     
     func resolve<T>(_ type: T.Type) -> T? {
         return container.resolve(type)
+    }
+    
+    func resolve<T, Arg>(_ type: T.Type, argument: Arg) -> T? {
+        return container.resolve(type, argument: argument)
     }
 }

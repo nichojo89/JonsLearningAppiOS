@@ -1,27 +1,31 @@
 //
-//  CharacterGenerationScreen.swift
+//  ImageGenerationScreen.swift
 //  JonsLearningAppiOS
 //
 //  Created by Jon Nichols on 12/30/24.
 //
 
 import SwiftUI
+import Lottie
 
-struct CharacterGenerationScreen: View {
-    @ObservedObject private var viewmodel: CharacterGenerationViewmodel
+struct ImageGenerationScreen: View {
+    @ObservedObject private var viewmodel: ImageGenerationViewmodel
     
+    @State private var selectedImage: UIImage?
     @State private var isImageSet: Bool = false
     @State private var isCameraPresented = false
     @State private var isImagePickerPresented = false
     
     init() {
-        viewmodel = AppContainer.shared.resolve(CharacterGenerationViewmodel.self)!
+        viewmodel = AppContainer.shared.resolve(ImageGenerationViewmodel.self)!
     }
 
     var body: some View {
         ZStack(alignment: .top) {
             LinearGradient(
-                gradient: Gradient(colors: [Color(hex: 0xFF8A2BE2), Color(hex: 0xFF9370DB), Color(hex: 0xFF8A2BE2)]),
+                gradient: Gradient(colors: [
+                    Color(hex: 0xFFE0EAFC),
+                    Color(hex: 0xFF9CFDEF3)]),
                 startPoint: .top,
                 endPoint: .bottom
             )
@@ -29,22 +33,24 @@ struct CharacterGenerationScreen: View {
 
             VStack(spacing: 16) {
                 GeometryReader { geometry in
-
                     VStack {
                         ImageUploader(
-                            image: $viewmodel.selectedImage,
+                            image: $viewmodel.image,
                             isImageSet: $isImageSet,
-                            generatedImage: $viewmodel.generatedImage,
-                            isGeneratedImage: $viewmodel.isGeneratedImage
+                            isLoading: $viewmodel.isLoading,
+                            isGeneratedImage: $viewmodel.imageIsGenerated
                         )
                         .onTapGesture {
-                            viewmodel.isImageSelected.toggle()
+                            if !viewmodel.isLoading {
+                                viewmodel.imageSelect()
+                            }
                         }
-
-                        Text("Select an image to base your character from")
-                            .foregroundColor(.white)
-                            .font(.system(size: 16, weight: .bold))
-                            .multilineTextAlignment(.center)
+                        if(viewmodel.imageIsGenerated){
+                            if let image = viewmodel.image {
+                                ImageToolBar(image: image)
+                            }
+                            Spacer()
+                        }
 
                         DOSStyleOutlinedTextField(prompt: $viewmodel.prompt, title: viewmodel.title)
 
@@ -52,11 +58,7 @@ struct CharacterGenerationScreen: View {
 
                         Button {
                             Task {
-                                do {
-                                    _ = try await viewmodel.generateCharacter()
-                                } catch {
-                                    print("HTTP Error: \(error)")
-                                }
+                                await viewmodel.generateImage()
                             }
                         } label: {
                             Text("Generate")
@@ -64,9 +66,9 @@ struct CharacterGenerationScreen: View {
                                 .padding()
                                 .foregroundColor(.white)
                         }
-                        .disabled(!viewmodel.generateCharacterEnabled)
+                        .disabled(!viewmodel.generateImageEnabled)
                         .background(
-                            !viewmodel.generateCharacterEnabled
+                            !viewmodel.generateImageEnabled
                                     ? LinearGradient(
                                         gradient: Gradient(colors: [
                                             Color(red: 0.8314, green: 0.5569, blue: 0.8431), // Very light purple
@@ -99,22 +101,21 @@ struct CharacterGenerationScreen: View {
                     .onTapGesture {
                         viewmodel.isImageSelected = false
                     }
-
                 HStack(spacing: 16) {
                     Spacer()
                     CameraButton { newImage in
-                        viewmodel.selectedImage = newImage
+                        viewmodel.image = newImage
                         isImageSet = true
                         viewmodel.isImageSelected = false
-                        viewmodel.isGeneratedImage = false
+                        viewmodel.imageIsGenerated = false
                         isCameraPresented = true
                     }
                     Spacer()
                     GalleryButton { newImage in
-                        viewmodel.selectedImage = newImage
+                        viewmodel.image = newImage
                         isImageSet = true
                         viewmodel.isImageSelected = false
-                        viewmodel.isGeneratedImage = false
+                        viewmodel.imageIsGenerated = false
                         isImagePickerPresented = true
                     }
                     Spacer()
@@ -124,14 +125,29 @@ struct CharacterGenerationScreen: View {
         }
         .sheet(isPresented: $isImagePickerPresented) {
             ImagePicker(isImagePickerPresented: $isImagePickerPresented) { image in
-                viewmodel.selectedImage = image
-                isImagePickerPresented = false
+                self.viewmodel.image = image
+                self.isImagePickerPresented = false
             }
         }
         .sheet(isPresented: $isCameraPresented) {
             CameraPicker(isCameraPresented: $isCameraPresented) { image in
-                viewmodel.selectedImage = image
-                isCameraPresented = false
+                self.viewmodel.image = image
+                self.isCameraPresented = false
+            }
+        }
+        .onChange(of: viewmodel.image) { newValue, oldValue in
+            if let img = viewmodel.image {
+                selectedImage = img
+            }
+        }
+        .navigationDestination(for: String.self) { destination in
+            switch(destination) {
+            case NavigationDestination.image_preview:
+                if let image = self.selectedImage {
+                    ImagePreviewScreen(image: image)
+                }
+                default:
+                    EmptyView()
             }
         }
     }
@@ -174,5 +190,5 @@ struct GalleryButton: View {
 }
 
 #Preview {
-    CharacterGenerationScreen()
+    ImageGenerationScreen()
 }

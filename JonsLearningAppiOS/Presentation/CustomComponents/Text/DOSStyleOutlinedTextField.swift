@@ -14,31 +14,55 @@ struct DOSStyleOutlinedTextField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.custom("PressStart2P-Regular", size: 12))
-                .foregroundColor(.green)
-                .padding(4)
-                .background(Color.black)
-                .border(Color.green, width: 2)
+                .font(Font.system(size: 20, weight: .bold))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [
+                            Color(hex: 0xFF03001e),
+                            Color(hex: 0xFF7303c0),
+                            Color(hex: 0xFFec38bc)
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .padding(.vertical,4)
+            
             
             ZStack(alignment: .topLeading) {
                 // Placeholder if prompt is empty
                 if prompt.isEmpty {
                     Text(prompt)
-                        .foregroundColor(.green.opacity(0.5))
+                        .foregroundColor(.black.opacity(0.5))
                         .font(.custom("PressStart2P-Regular", size: 14))
                         .padding(8)
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                 }
                 
                 TextEditor(text: $prompt)
+                    
                     .padding(8)
                     .frame(height: UIScreen.main.bounds.height / 4)
-                    .background(Color.black)
-                    .foregroundColor(.green)
+                    .background(Color.white)
+                    .foregroundColor(.black)
                     .font(.custom("PressStart2P-Regular", size: 14))
-                    .border(Color.green, width: 2)
-                    .cornerRadius(4)
-                    .scrollContentBackground(.hidden)
+                    .cornerRadius(16)
+                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .stroke(LinearGradient(
+                                                gradient: Gradient(colors: [
+                                                    Color(hex: 0xFF03001e),
+                                                    Color(hex: 0xFF7303c0),
+                                                    Color(hex: 0xFFec38bc),
+                                                    Color(hex: 0xFFfdeff9)
+                                                ]),
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            ), lineWidth: 4)
+                                    )
+                    .cornerRadius(16)
+                    .scrollIndicators(.visible)
+                    .scrollContentBackground(.visible)
             }
         }
     }
