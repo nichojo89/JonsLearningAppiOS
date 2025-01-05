@@ -31,7 +31,7 @@ struct EmailVerificationScreen: View {
                     Button {
                         viewmodel.sendVerificationEmail()
                     } label: {
-                        Text("Sign up")
+                        Text("Send")
                             .frame(maxWidth: .infinity)
                             .padding()
                             .foregroundColor(.white)

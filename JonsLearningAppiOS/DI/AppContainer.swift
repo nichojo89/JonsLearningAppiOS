@@ -37,6 +37,11 @@ class AppContainer {
             return Img2ImgUseCaseImpl(httpClient: httpClient)
         }
         
+        container.register(Txt2ImgUseCase.self) { resolver in
+            let httpClient = resolver.resolve(HTTPClient.self)!
+            return Txt2ImgUseCaseImpl(httpClient: httpClient)
+        }
+        
         container.register(HTTPClient.self) { resolver in
             let authenticator = resolver.resolve(FirebaseAuthenticator.self)!
             return HTTPClient(authenticator: authenticator)
@@ -61,7 +66,8 @@ class AppContainer {
         
         container.register(CharacterGenerationViewmodel.self) { resolver in
             let img2ImgUseCase = resolver.resolve(Img2ImgUseCase.self)!
-            return CharacterGenerationViewmodel(img2ImgUseCase: img2ImgUseCase)
+            let txt2ImgUseCase = resolver.resolve(Txt2ImgUseCase.self)!
+            return CharacterGenerationViewmodel(img2ImgUseCase: img2ImgUseCase, txt2ImgUseCase: txt2ImgUseCase)
         }
     }
     

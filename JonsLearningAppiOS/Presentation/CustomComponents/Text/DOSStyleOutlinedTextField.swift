@@ -9,7 +9,6 @@ import SwiftUI
 
 struct DOSStyleOutlinedTextField: View {
     @Binding var prompt: String
-    @State var height: CGFloat
     let title: String
     
     var body: some View {
@@ -33,7 +32,7 @@ struct DOSStyleOutlinedTextField: View {
                 
                 TextEditor(text: $prompt)
                     .padding(8)
-                    .frame(height: height / 4)
+                    .frame(height: UIScreen.main.bounds.height / 4)
                     .background(Color.black)
                     .foregroundColor(.green)
                     .font(.custom("PressStart2P-Regular", size: 14))

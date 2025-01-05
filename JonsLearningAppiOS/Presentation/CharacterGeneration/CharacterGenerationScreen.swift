@@ -29,11 +29,9 @@ struct CharacterGenerationScreen: View {
 
             VStack(spacing: 16) {
                 GeometryReader { geometry in
-                    let screenHeight = geometry.size.height > 0 ? geometry.size.height : 600
 
                     VStack {
                         ImageUploader(
-                            height: screenHeight,
                             image: $viewmodel.selectedImage,
                             isImageSet: $isImageSet,
                             generatedImage: $viewmodel.generatedImage,
@@ -48,9 +46,7 @@ struct CharacterGenerationScreen: View {
                             .font(.system(size: 16, weight: .bold))
                             .multilineTextAlignment(.center)
 
-                        Spacer()
-
-                        DOSStyleOutlinedTextField(prompt: $viewmodel.prompt, height: screenHeight, title: viewmodel.title)
+                        DOSStyleOutlinedTextField(prompt: $viewmodel.prompt, title: viewmodel.title)
 
                         Spacer()
 

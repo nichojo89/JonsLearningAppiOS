@@ -37,7 +37,6 @@ class SignInViewModel: ObservableObject {
                     if(self.navigationState.path.count > 0){
                         self.navigationState.path.removeLast()
                     }
-                    self.navigationState.path.removeLast()
                     //self.navigationState.path.append(NavigationDestination.dashboard)
                     self.navigationState.path.append(NavigationDestination.character_generation)
                 } else {
